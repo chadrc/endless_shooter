@@ -10,6 +10,7 @@ public class DesktopLauncher {
 		config.title = "Endless Shooter";
 		config.width = 800;
 		config.height = 800;
+		config.resizable = false;
 		new LwjglApplication(new EndlessShooter(), config);
 	}
 }
