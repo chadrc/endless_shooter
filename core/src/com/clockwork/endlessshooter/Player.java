@@ -1,44 +1,85 @@
 package com.clockwork.endlessshooter;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.math.Vector3;
 
 /**
  * Created by Chad Collins on 4/25/2016.
  */
-public class Player {
+public class Player implements IWorldObject {
     private Texture img;
     private Rectangle rectangle;
     private float speed;
     private float rotation;
 
-    private Array<Bullet> bullets;
-
     public Player() {
         img = new Texture("badlogic.jpg");
-        bullets = new Array<Bullet>();
         rectangle = new Rectangle();
-        rectangle.width = 100;
-        rectangle.height = 100;
+        rectangle.width = 50;
+        rectangle.height = 50;
     }
 
     public void shoot() {
         Vector2 dir = new Vector2(MathUtils.cosDeg(rotation), MathUtils.sinDeg(rotation));
-        Bullet b = new Bullet(rectangle.x, rectangle.y, 10, dir);
-        bullets.add(b);
+        new Bullet(rectangle.x, rectangle.y, 10, dir);
     }
 
+    @Override
+    public void hitOccurred(IWorldObject other) {
+
+    }
+
+    @Override
+    public Vector2 getPosition() {
+        return new Vector2(rectangle.x, rectangle.y);
+    }
+
+    @Override
+    public float getHitRadius() {
+        return rectangle.width/2;
+    }
+
+    @Override
     public void update() {
-        for (Bullet b : bullets) {
-            b.update();
+        Vector3 touchPos = new Vector3();
+        touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+        EndlessShooter.MainCamera.unproject(touchPos);
+        float difX = rectangle.x - touchPos.x;
+        float difY = rectangle.y - touchPos.y;
+        float tan = MathUtils.atan2(difY, difX);
+        rotation = tan * MathUtils.radiansToDegrees + 180;
+
+        if (Gdx.input.isTouched()) {
+            shoot();
+        }
+
+        if ((Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) &&
+                rectangle.y + rectangle.height/2 < EndlessShooter.ScreenHeight) {
+            rectangle.y += speed;
+        }
+
+        if ((Gdx.input.isKeyPressed(Input.Keys.S)  || Gdx.input.isKeyPressed(Input.Keys.UP)) &&
+                rectangle.y - rectangle.height/2 > 0) {
+            rectangle.y -= speed;
+        }
+
+        if ((Gdx.input.isKeyPressed(Input.Keys.A)  || Gdx.input.isKeyPressed(Input.Keys.UP)) &&
+                rectangle.x - rectangle.width/2 > 0) {
+            rectangle.x -= speed;
+        }
+
+        if ((Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.UP)) &&
+                rectangle.x + rectangle.width/2 < EndlessShooter.ScreenWidth) {
+            rectangle.x += speed;
         }
     }
 
+    @Override
     public void render() {
         float cx = rectangle.x - rectangle.width/2;
         float cy = rectangle.y - rectangle.height/2;
@@ -52,10 +93,6 @@ public class Player {
                 img.getWidth(), img.getHeight(),
                 false, false);
         EndlessShooter.Batch.end();
-
-        for (Bullet b : bullets) {
-            b.render();
-        }
     }
 
     public void setX(float x) {
@@ -80,29 +117,5 @@ public class Player {
 
     public void setSpeed(float speed) {
         this.speed = speed;
-    }
-
-    public float getTopBound() {
-        return rectangle.y + rectangle.height/2;
-    }
-
-    public float getRightBound() {
-        return rectangle.x + rectangle.width/2;
-    }
-
-    public float getBottomBound() {
-        return rectangle.y - rectangle.height/2;
-    }
-
-    public float getLeftBound() {
-        return rectangle.x - rectangle.width/2;
-    }
-
-    public float getRotation() {
-        return rotation;
-    }
-
-    public void setRotation(float rotation) {
-        this.rotation = rotation;
     }
 }
