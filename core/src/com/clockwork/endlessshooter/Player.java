@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -12,21 +11,18 @@ import com.badlogic.gdx.math.Vector3;
  * Created by Chad Collins on 4/25/2016.
  */
 public class Player implements IWorldObject {
-    private Texture img;
-    private Rectangle rectangle;
     private float speed;
-    private float rotation;
+    private SpriteRenderer renderer;
 
     public Player() {
-        img = new Texture("badlogic.jpg");
-        rectangle = new Rectangle();
-        rectangle.width = 50;
-        rectangle.height = 50;
+        renderer = new SpriteRenderer("badlogic.jpg");
+        renderer.setSize(new Vector2(50, 50));
+        World.AddWorldObject(this);
     }
 
     public void shoot() {
-        Vector2 dir = new Vector2(MathUtils.cosDeg(rotation), MathUtils.sinDeg(rotation));
-        new Bullet(rectangle.x, rectangle.y, 800, dir);
+        Vector2 dir = new Vector2(MathUtils.cosDeg(renderer.getRotation()), MathUtils.sinDeg(renderer.getRotation()));
+        new Bullet(renderer.getPosition().x, renderer.getPosition().y, 800, dir);
     }
 
     @Override
@@ -36,12 +32,12 @@ public class Player implements IWorldObject {
 
     @Override
     public Vector2 getPosition() {
-        return new Vector2(rectangle.x, rectangle.y);
+        return new Vector2(renderer.getPosition().x, renderer.getPosition().y);
     }
 
     @Override
     public float getHitRadius() {
-        return rectangle.width/2;
+        return renderer.getSize().x/2;
     }
 
     @Override
@@ -49,10 +45,10 @@ public class Player implements IWorldObject {
         Vector3 touchPos = new Vector3();
         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
         EndlessShooter.MainCamera.unproject(touchPos);
-        float difX = rectangle.x - touchPos.x;
-        float difY = rectangle.y - touchPos.y;
+        float difX = renderer.getPosition().x - touchPos.x;
+        float difY = renderer.getPosition().y - touchPos.y;
         float tan = MathUtils.atan2(difY, difX);
-        rotation = tan * MathUtils.radiansToDegrees + 180;
+        renderer.setRotation(tan * MathUtils.radiansToDegrees + 180);
 
         if (Gdx.input.isTouched()) {
             shoot();
@@ -61,56 +57,45 @@ public class Player implements IWorldObject {
         float delta = speed * Gdx.graphics.getDeltaTime();
 
         if ((Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) &&
-                rectangle.y + rectangle.height/2 < EndlessShooter.ScreenHeight) {
-            rectangle.y += delta;
+                renderer.getPosition().y + renderer.getSize().y/2 < EndlessShooter.ScreenHeight) {
+            renderer.setY(renderer.getY() + delta);
         }
 
         if ((Gdx.input.isKeyPressed(Input.Keys.S)  || Gdx.input.isKeyPressed(Input.Keys.UP)) &&
-                rectangle.y - rectangle.height/2 > 0) {
-            rectangle.y -= delta;
+                renderer.getPosition().y - renderer.getSize().y/2 > 0) {
+            renderer.setY(renderer.getY() - delta);
         }
 
         if ((Gdx.input.isKeyPressed(Input.Keys.A)  || Gdx.input.isKeyPressed(Input.Keys.UP)) &&
-                rectangle.x - rectangle.width/2 > 0) {
-            rectangle.x -= delta;
+                renderer.getPosition().x - renderer.getSize().x/2 > 0) {
+            renderer.setX(renderer.getX() - delta);
         }
 
         if ((Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.UP)) &&
-                rectangle.x + rectangle.width/2 < EndlessShooter.ScreenWidth) {
-            rectangle.x += delta;
+                renderer.getPosition().x + renderer.getSize().x/2 < EndlessShooter.ScreenWidth) {
+            renderer.setX(renderer.getX() + delta);
         }
     }
 
     @Override
     public void render() {
-        float cx = rectangle.x - rectangle.width/2;
-        float cy = rectangle.y - rectangle.height/2;
-        EndlessShooter.Batch.begin();
-        EndlessShooter.Batch.draw(img, cx, cy,
-                rectangle.width/2, rectangle.height/2,
-                rectangle.width, rectangle.height,
-                1, 1,
-                rotation,
-                0, 0,
-                img.getWidth(), img.getHeight(),
-                false, false);
-        EndlessShooter.Batch.end();
+        renderer.render();
     }
 
     public void setX(float x) {
-        rectangle.x = x;
+        renderer.setX(x);
     }
 
     public void setY(float y) {
-        rectangle.y = y;
+        renderer.setY(y);
     }
 
     public float getX() {
-        return rectangle.x;
+        return renderer.getX();
     }
 
     public float getY() {
-        return rectangle.y;
+        return renderer.getY();
     }
 
     public float getSpeed() {

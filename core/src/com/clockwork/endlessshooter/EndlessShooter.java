@@ -11,14 +11,10 @@ import com.badlogic.gdx.math.Vector2;
 public class EndlessShooter extends ApplicationAdapter {
     public static float ScreenWidth = 800;
     public static float ScreenHeight = 800;
-    public static ShapeRenderer Renderer;
-    public static SpriteBatch Batch;
     public static OrthographicCamera MainCamera;
 	
 	@Override
 	public void create () {
-		Batch = new SpriteBatch();
-        Renderer = new ShapeRenderer();
 		MainCamera = new OrthographicCamera();
         MainCamera.setToOrtho(false, ScreenWidth, ScreenHeight);
         Player player = new Player();
@@ -39,9 +35,9 @@ public class EndlessShooter extends ApplicationAdapter {
 		Gdx.gl.glClearColor(.3f, .3f, .3f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        Batch.setProjectionMatrix(MainCamera.combined);
-        Renderer.setProjectionMatrix(MainCamera.combined);
-
+        SpriteRenderer.SetProjection(MainCamera.combined);
+        SpriteRenderer.BeginBatch();
         World.Update();
+        SpriteRenderer.EndBatch();
 	}
 }

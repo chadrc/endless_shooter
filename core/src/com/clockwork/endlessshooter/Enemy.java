@@ -11,39 +11,26 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class Enemy implements IWorldObject {
     private int health;
-    private Texture img;
-    private float size;
-    private Vector2 position;
+    private SpriteRenderer renderer;
     private float speed;
 
     public Enemy(int health, Vector2 position) {
         this.health = health;
-        this.position = position;
-        img = new Texture("badlogic.jpg");
-        size = 40;
+        renderer = new SpriteRenderer("badlogic.jpg");
+        renderer.setPosition(position);
+        renderer.setSize(new Vector2(40, 40));
         speed = 80;
         World.AddWorldObject(this);
     }
 
     @Override
     public void render() {
-        float cx = position.x - size/2;
-        float cy = position.y - size/2;
-        EndlessShooter.Batch.begin();
-        EndlessShooter.Batch.draw(img, cx, cy,
-                size/2, size/2,
-                size, size,
-                1, 1,
-                0,
-                0, 0,
-                img.getWidth(), img.getHeight(),
-                false, false);
-        EndlessShooter.Batch.end();
+        renderer.render();
     }
 
     @Override
     public void update() {
-        position.y -= speed * Gdx.graphics.getDeltaTime();
+        renderer.setY(renderer.getY() - speed * Gdx.graphics.getDeltaTime());
     }
 
     @Override
@@ -58,11 +45,11 @@ public class Enemy implements IWorldObject {
 
     @Override
     public float getHitRadius() {
-        return size/2;
+        return renderer.getSize().x/2;
     }
 
     @Override
     public Vector2 getPosition() {
-        return position;
+        return renderer.getPosition();
     }
 }

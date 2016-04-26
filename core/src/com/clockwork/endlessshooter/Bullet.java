@@ -1,26 +1,21 @@
 package com.clockwork.endlessshooter;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by Chad Collins on 4/25/2016.
  */
 public class Bullet implements IWorldObject {
-    private Rectangle rectangle;
     private float speed;
     private Vector2 direction;
+    private SpriteRenderer renderer;
 
     public Bullet(float x, float y, float speed, Vector2 direction) {
         direction = direction.nor();
-        rectangle = new Rectangle();
-        rectangle.x = x;
-        rectangle.y = y;
-        rectangle.width = 5;
-        rectangle.height = 5;
+        renderer = new SpriteRenderer("badlogic.jpg");
+        renderer.setPosition(new Vector2(x, y));
+        renderer.setSize(new Vector2(10, 10));
         this.speed = speed;
         this.direction = direction;
         World.AddWorldObject(this);
@@ -28,11 +23,11 @@ public class Bullet implements IWorldObject {
 
     @Override
     public void update() {
-        rectangle.x += direction.x * speed * Gdx.graphics.getDeltaTime();
-        rectangle.y += direction.y * speed * Gdx.graphics.getDeltaTime();
+        renderer.setX(renderer.getX() + direction.x * speed * Gdx.graphics.getDeltaTime());
+        renderer.setY(renderer.getY() + direction.y * speed * Gdx.graphics.getDeltaTime());
 
-        if (rectangle.x < -100 || rectangle.x > EndlessShooter.ScreenWidth + 100 ||
-                rectangle.y < -100 || rectangle.y > EndlessShooter.ScreenHeight + 100) {
+        if (renderer.getX() < -100 || renderer.getX() > EndlessShooter.ScreenWidth + 100 ||
+                renderer.getY() < -100 || renderer.getY() > EndlessShooter.ScreenHeight + 100) {
             World.RemoveWorldObject(this);
         }
     }
@@ -40,13 +35,13 @@ public class Bullet implements IWorldObject {
     @Override
     public Vector2 getPosition()
     {
-        return new Vector2(rectangle.x, rectangle.y);
+        return renderer.getPosition();
     }
 
     @Override
     public float getHitRadius()
     {
-        return rectangle.width;
+        return renderer.getSize().x;
     }
 
     @Override
@@ -58,9 +53,6 @@ public class Bullet implements IWorldObject {
 
     @Override
     public void render() {
-        EndlessShooter.Renderer.begin(ShapeRenderer.ShapeType.Filled);
-        EndlessShooter.Renderer.setColor(1, 0, 0, 1);
-        EndlessShooter.Renderer.circle(rectangle.x, rectangle.y, rectangle.width);
-        EndlessShooter.Renderer.end();
+        renderer.render();
     }
 }
