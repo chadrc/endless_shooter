@@ -22,8 +22,13 @@ public class EndlessShooter extends ApplicationAdapter {
         player.setY(ScreenHeight/2);
         player.setSpeed(100);
 
+//        for (int i=0; i<10; i++) {
+//            new Enemy(10, new Vector2(MathUtils.random(25, ScreenWidth-25),
+//                    ScreenHeight + MathUtils.random(50, 100)));
+//        }
+
         for (int i=0; i<10; i++) {
-            Enemy e = new Enemy(10, new Vector2(MathUtils.random(25, ScreenWidth-25),
+            new ShootingEnemy(10, new Vector2(MathUtils.random(25, ScreenWidth-25),
                     ScreenHeight + MathUtils.random(50, 100)));
         }
 

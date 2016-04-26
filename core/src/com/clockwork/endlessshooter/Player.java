@@ -2,7 +2,6 @@ package com.clockwork.endlessshooter;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -22,7 +21,7 @@ public class Player implements IWorldObject {
 
     public void shoot() {
         Vector2 dir = new Vector2(MathUtils.cosDeg(renderer.getRotation()), MathUtils.sinDeg(renderer.getRotation()));
-        new Bullet(renderer.getPosition().x, renderer.getPosition().y, 800, dir);
+        new PlayerBullet(renderer.getPosition().x, renderer.getPosition().y, 800, dir);
     }
 
     @Override

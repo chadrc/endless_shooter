@@ -1,15 +1,13 @@
 package com.clockwork.endlessshooter;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by Chad Collins on 4/26/2016.
  */
 public class Enemy implements IWorldObject {
+
     private int health;
     private SpriteRenderer renderer;
     private float speed;
@@ -35,7 +33,7 @@ public class Enemy implements IWorldObject {
 
     @Override
     public void hitOccurred(IWorldObject other) {
-        if (other instanceof Bullet) {
+        if (other instanceof PlayerBullet) {
             health--;
             if (health <= 0) {
                 World.RemoveWorldObject(this);
@@ -51,5 +49,13 @@ public class Enemy implements IWorldObject {
     @Override
     public Vector2 getPosition() {
         return renderer.getPosition();
+    }
+
+    public Vector2 getSize() {
+        return renderer.getSize();
+    }
+
+    public int getHealth() {
+        return health;
     }
 }

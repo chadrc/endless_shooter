@@ -46,7 +46,7 @@ public class Bullet implements IWorldObject {
 
     @Override
     public void hitOccurred(IWorldObject other) {
-        if (!(other instanceof Bullet) && !(other instanceof Player)) {
+        if (!(other instanceof Bullet)) {
             World.RemoveWorldObject(this);
         }
     }
