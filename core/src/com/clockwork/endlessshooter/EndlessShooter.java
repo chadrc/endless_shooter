@@ -5,6 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 
 public class EndlessShooter extends ApplicationAdapter {
     public static float ScreenWidth = 800;
@@ -22,7 +24,12 @@ public class EndlessShooter extends ApplicationAdapter {
         Player player = new Player();
         player.setX(ScreenWidth/2);
         player.setY(ScreenHeight/2);
-        player.setSpeed(2);
+        player.setSpeed(100);
+
+        for (int i=0; i<10; i++) {
+            Enemy e = new Enemy(10, new Vector2(MathUtils.random(25, ScreenWidth-25),
+                    ScreenHeight + MathUtils.random(50, 100)));
+        }
 
         World.AddWorldObject(player);
 	}

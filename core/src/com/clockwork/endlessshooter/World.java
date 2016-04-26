@@ -34,7 +34,8 @@ public class World {
             IWorldObject o = instance.worldArray.get(i);
             for (int j=0; j<instance.worldArray.size; j++) {
                 IWorldObject t = instance.worldArray.get(j);
-                if (!o.equals(t) && o.getPosition().dst2(t.getPosition()) <= o.getHitRadius() + t.getHitRadius()) {
+                float dist = o.getPosition().dst(t.getPosition());
+                if (!o.equals(t) && dist <= o.getHitRadius() + t.getHitRadius()) {
                     o.hitOccurred(t);
                 }
             }

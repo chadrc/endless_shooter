@@ -1,5 +1,6 @@
 package com.clockwork.endlessshooter;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
@@ -27,8 +28,8 @@ public class Bullet implements IWorldObject {
 
     @Override
     public void update() {
-        rectangle.x += direction.x * speed;
-        rectangle.y += direction.y * speed;
+        rectangle.x += direction.x * speed * Gdx.graphics.getDeltaTime();
+        rectangle.y += direction.y * speed * Gdx.graphics.getDeltaTime();
 
         if (rectangle.x < -100 || rectangle.x > EndlessShooter.ScreenWidth + 100 ||
                 rectangle.y < -100 || rectangle.y > EndlessShooter.ScreenHeight + 100) {
@@ -45,7 +46,7 @@ public class Bullet implements IWorldObject {
     @Override
     public float getHitRadius()
     {
-        return rectangle.width/2;
+        return rectangle.width;
     }
 
     @Override

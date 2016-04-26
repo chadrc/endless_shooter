@@ -26,7 +26,7 @@ public class Player implements IWorldObject {
 
     public void shoot() {
         Vector2 dir = new Vector2(MathUtils.cosDeg(rotation), MathUtils.sinDeg(rotation));
-        new Bullet(rectangle.x, rectangle.y, 10, dir);
+        new Bullet(rectangle.x, rectangle.y, 800, dir);
     }
 
     @Override
@@ -58,24 +58,26 @@ public class Player implements IWorldObject {
             shoot();
         }
 
+        float delta = speed * Gdx.graphics.getDeltaTime();
+
         if ((Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) &&
                 rectangle.y + rectangle.height/2 < EndlessShooter.ScreenHeight) {
-            rectangle.y += speed;
+            rectangle.y += delta;
         }
 
         if ((Gdx.input.isKeyPressed(Input.Keys.S)  || Gdx.input.isKeyPressed(Input.Keys.UP)) &&
                 rectangle.y - rectangle.height/2 > 0) {
-            rectangle.y -= speed;
+            rectangle.y -= delta;
         }
 
         if ((Gdx.input.isKeyPressed(Input.Keys.A)  || Gdx.input.isKeyPressed(Input.Keys.UP)) &&
                 rectangle.x - rectangle.width/2 > 0) {
-            rectangle.x -= speed;
+            rectangle.x -= delta;
         }
 
         if ((Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.UP)) &&
                 rectangle.x + rectangle.width/2 < EndlessShooter.ScreenWidth) {
-            rectangle.x += speed;
+            rectangle.x += delta;
         }
     }
 
