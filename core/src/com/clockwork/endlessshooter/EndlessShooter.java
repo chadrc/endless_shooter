@@ -17,6 +17,7 @@ public class EndlessShooter extends ApplicationAdapter {
     private SpriteBatch mainBatch;
     private World world;
     private Rectangle bounds;
+    private EnemySpawner spawner;
 
     private static float OriginalWidth = 800;
     private static float OriginalHeight = 800;
@@ -33,15 +34,13 @@ public class EndlessShooter extends ApplicationAdapter {
         mainBatch = new SpriteBatch();
 		MainCamera = new OrthographicCamera();
         MainCamera.setToOrtho(false, ScreenWidth, ScreenHeight);
+
         Player player = new Player();
         player.setX(ScreenWidth/2);
         player.setY(ScreenHeight/2);
         player.setSpeed(100);
 
-        for (int i=0; i<10; i++) {
-            new ShootingEnemy(10, new Vector2(MathUtils.random(25, ScreenWidth-25),
-                    ScreenHeight + MathUtils.random(50, 100)));
-        }
+        spawner = new EnemySpawner();
 
         world.addWorldObject(player);
 	}
@@ -52,6 +51,8 @@ public class EndlessShooter extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         MainCamera.update();
+        spawner.update();
+
         mainBatch.setProjectionMatrix(MainCamera.combined);
         mainBatch.begin();
         world.update();
@@ -71,6 +72,18 @@ public class EndlessShooter extends ApplicationAdapter {
         MainCamera.setToOrtho(false, ScreenWidth, ScreenHeight);
         MainCamera.translate(-viewX, -viewY);
         bounds = new Rectangle(-viewX, -viewY, screenWidth, screenHeight);
+    }
+
+    static float RandomScreenX() {
+        return MathUtils.random(current.bounds.getX(), current.bounds.getWidth()+current.bounds.getX());
+    }
+
+    static float RandomScreenY() {
+        return MathUtils.random(current.bounds.getY(), current.bounds.getHeight()+current.bounds.getY());
+    }
+
+    static Vector2 RandomScreenPoint() {
+        return new Vector2(RandomScreenX(), RandomScreenY());
     }
 
     static Rectangle GetScreenBounds()
