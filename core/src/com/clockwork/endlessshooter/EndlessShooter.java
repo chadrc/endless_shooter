@@ -12,9 +12,11 @@ public class EndlessShooter extends ApplicationAdapter {
     public static float ScreenWidth = 800;
     public static float ScreenHeight = 800;
     public static OrthographicCamera MainCamera;
+    private static SpriteBatch MainBatch;
 	
 	@Override
 	public void create () {
+        MainBatch = new SpriteBatch();
 		MainCamera = new OrthographicCamera();
         MainCamera.setToOrtho(false, ScreenWidth, ScreenHeight);
         Player player = new Player();
@@ -40,9 +42,14 @@ public class EndlessShooter extends ApplicationAdapter {
 		Gdx.gl.glClearColor(.3f, .3f, .3f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        SpriteRenderer.SetProjection(MainCamera.combined);
-        SpriteRenderer.BeginBatch();
+        MainBatch.setProjectionMatrix(MainCamera.combined);
+        MainBatch.begin();
         World.Update();
-        SpriteRenderer.EndBatch();
+        MainBatch.end();
 	}
+
+    public static SpriteBatch GetMainBatch()
+    {
+        return MainBatch;
+    }
 }

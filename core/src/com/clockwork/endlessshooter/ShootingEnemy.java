@@ -31,7 +31,8 @@ public class ShootingEnemy extends Enemy {
         }
         else
         {
-            new EnemyBullet(getPosition().x, getPosition().y, 500, new Vector2(0, -1));
+            EnemyBullet b = new EnemyBullet(getPosition().x, getPosition().y, 500, new Vector2(0, -1));
+            b.setColor(sprite.getColor().r, sprite.getColor().g, sprite.getColor().b, sprite.getColor().a);
         }
     }
 

@@ -1,6 +1,8 @@
 package com.clockwork.endlessshooter;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -8,27 +10,29 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class Enemy implements IWorldObject {
 
-    private int health;
-    private SpriteRenderer renderer;
-    private float speed;
+    protected int health;
+    protected Sprite sprite;
+    protected float speed;
 
     public Enemy(int health, Vector2 position) {
         this.health = health;
-        renderer = new SpriteRenderer("badlogic.jpg");
-        renderer.setPosition(position);
-        renderer.setSize(new Vector2(40, 40));
+        sprite = new Sprite(new Texture("BasicEnemyShip.png"));
+        sprite.setSize(40, 40);
+        sprite.setX(position.x + sprite.getWidth()/2);
+        sprite.setY(position.y + sprite.getHeight()/2);
+        sprite.setColor(1, 0, 1, 1);
         speed = 80;
         World.AddWorldObject(this);
     }
 
     @Override
     public void render() {
-        renderer.render();
+        sprite.draw(EndlessShooter.GetMainBatch());
     }
 
     @Override
     public void update() {
-        renderer.setY(renderer.getY() - speed * Gdx.graphics.getDeltaTime());
+        sprite.translateY(-speed * Gdx.graphics.getDeltaTime());
     }
 
     @Override
@@ -43,16 +47,16 @@ public class Enemy implements IWorldObject {
 
     @Override
     public float getHitRadius() {
-        return renderer.getSize().x/2;
+        return sprite.getWidth()/2;
     }
 
     @Override
     public Vector2 getPosition() {
-        return renderer.getPosition();
+        return new Vector2(sprite.getX()+sprite.getWidth()/2, sprite.getY()+sprite.getHeight()/2);
     }
 
     public Vector2 getSize() {
-        return renderer.getSize();
+        return new Vector2(sprite.getWidth(), sprite.getHeight());
     }
 
     public int getHealth() {
