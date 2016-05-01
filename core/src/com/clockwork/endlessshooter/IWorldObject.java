@@ -2,7 +2,7 @@ package com.clockwork.endlessshooter;
 
 import com.badlogic.gdx.math.Vector2;
 
-public interface IWorldObject {
+interface IWorldObject {
     void render();
     void update();
     void hitOccurred(IWorldObject other);

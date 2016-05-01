@@ -5,24 +5,25 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 /**
  * Created by Chad Collins on 4/25/2016.
  */
-public class Player implements IWorldObject {
+class Player implements IWorldObject {
     private float speed;
     private float reloadTimer;
     private float reloadTime;
     private Sprite sprite;
 
-    public Player() {
-        sprite = new Sprite(new Texture("Player-Ship.png"));
+    Player() {
+        sprite = new Sprite(Assets.GetPlayerShipTexture());
         sprite.setColor(0, 1, 0, 1);
         sprite.setSize(50, 50);
         sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
-        World.AddWorldObject(this);
+        EndlessShooter.RegisterWorldObject(this);
         reloadTime = 1;
         reloadTimer = 0;
     }
@@ -61,24 +62,25 @@ public class Player implements IWorldObject {
         }
 
         float delta = speed * Gdx.graphics.getDeltaTime();
+        Rectangle bounds = EndlessShooter.GetScreenBounds();
 
         if ((Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) &&
-                sprite.getY() + sprite.getHeight()/2 < EndlessShooter.ScreenHeight) {
+                sprite.getY() + sprite.getHeight() < bounds.getHeight() + bounds.getY()) {
             sprite.translateY(delta);
         }
 
         if ((Gdx.input.isKeyPressed(Input.Keys.S)  || Gdx.input.isKeyPressed(Input.Keys.UP)) &&
-                sprite.getY() - sprite.getHeight()/2 > 0) {
+                sprite.getY() > bounds.getY()) {
             sprite.translateY(-delta);
         }
 
         if ((Gdx.input.isKeyPressed(Input.Keys.A)  || Gdx.input.isKeyPressed(Input.Keys.UP)) &&
-                sprite.getX() - sprite.getWidth()/2 > 0) {
+                sprite.getX() > bounds.getX()) {
             sprite.translateX(-delta);
         }
 
         if ((Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.UP)) &&
-                sprite.getX() + sprite.getWidth()/2 < EndlessShooter.ScreenWidth) {
+                sprite.getX() + sprite.getWidth() < bounds.getWidth() + bounds.getX()) {
             sprite.translateX(delta);
         }
     }

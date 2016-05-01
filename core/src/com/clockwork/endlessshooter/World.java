@@ -6,19 +6,19 @@ import com.badlogic.gdx.utils.Array;
 /**
  * Created by Chad Collins on 4/25/2016.
  */
-public class World {
+class World {
     private static World instance = new World();
     private Array<IWorldObject> worldArray;
     private Array<IWorldObject> worldAddArray;
     private Array<IWorldObject> worldDeleteArray;
 
-    private World() {
+    World() {
         worldArray = new Array<IWorldObject>();
         worldAddArray = new Array<IWorldObject>();
         worldDeleteArray = new Array<IWorldObject>();
     }
 
-    public static void Update() {
+    void update() {
         // Add and Remove pending Updatables
         for (IWorldObject u : instance.worldAddArray) {
             instance.worldArray.add(u);
@@ -48,11 +48,11 @@ public class World {
         }
     }
 
-    public static void AddWorldObject(IWorldObject updatable) {
+    void addWorldObject(IWorldObject updatable) {
         instance.worldAddArray.add(updatable);
     }
 
-    public static void RemoveWorldObject(IWorldObject updatable) {
+    void removeWorldObject(IWorldObject updatable) {
         instance.worldDeleteArray.add(updatable);
     }
 }

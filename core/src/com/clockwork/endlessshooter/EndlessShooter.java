@@ -2,21 +2,35 @@ package com.clockwork.endlessshooter;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class EndlessShooter extends ApplicationAdapter {
-    public static float ScreenWidth = 800;
-    public static float ScreenHeight = 800;
-    public static OrthographicCamera MainCamera;
-    private static SpriteBatch MainBatch;
+    private static EndlessShooter current;
+    static float ScreenWidth = 800;
+    static float ScreenHeight = 800;
+    static OrthographicCamera MainCamera;
+    private SpriteBatch mainBatch;
+    private World world;
+    private Rectangle bounds;
+
+    private static float OriginalWidth = 800;
+    private static float OriginalHeight = 800;
 	
 	@Override
 	public void create () {
-        MainBatch = new SpriteBatch();
+        current = this;
+        ScreenWidth = Gdx.graphics.getWidth();
+        ScreenHeight = Gdx.graphics.getHeight();
+        OriginalWidth = ScreenWidth;
+        OriginalHeight = ScreenHeight;
+        Assets.LoadAssets();
+        world = new World();
+        mainBatch = new SpriteBatch();
 		MainCamera = new OrthographicCamera();
         MainCamera.setToOrtho(false, ScreenWidth, ScreenHeight);
         Player player = new Player();
@@ -24,17 +38,12 @@ public class EndlessShooter extends ApplicationAdapter {
         player.setY(ScreenHeight/2);
         player.setSpeed(100);
 
-//        for (int i=0; i<10; i++) {
-//            new Enemy(10, new Vector2(MathUtils.random(25, ScreenWidth-25),
-//                    ScreenHeight + MathUtils.random(50, 100)));
-//        }
-
         for (int i=0; i<10; i++) {
             new ShootingEnemy(10, new Vector2(MathUtils.random(25, ScreenWidth-25),
                     ScreenHeight + MathUtils.random(50, 100)));
         }
 
-        World.AddWorldObject(player);
+        world.addWorldObject(player);
 	}
 
 	@Override
@@ -42,14 +51,42 @@ public class EndlessShooter extends ApplicationAdapter {
 		Gdx.gl.glClearColor(.3f, .3f, .3f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        MainBatch.setProjectionMatrix(MainCamera.combined);
-        MainBatch.begin();
-        World.Update();
-        MainBatch.end();
+        MainCamera.update();
+        mainBatch.setProjectionMatrix(MainCamera.combined);
+        mainBatch.begin();
+        world.update();
+        mainBatch.end();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            Gdx.app.exit();
+        }
 	}
 
-    public static SpriteBatch GetMainBatch()
+    @Override
+    public void resize(int screenWidth, int screenHeight) {
+        ScreenWidth = screenWidth;
+        ScreenHeight = screenHeight;
+        float viewX = (screenWidth - OriginalWidth) / 2;
+        float viewY = (screenHeight - OriginalHeight) / 2;
+        MainCamera.setToOrtho(false, ScreenWidth, ScreenHeight);
+        MainCamera.translate(-viewX, -viewY);
+        bounds = new Rectangle(-viewX, -viewY, screenWidth, screenHeight);
+    }
+
+    static Rectangle GetScreenBounds()
     {
-        return MainBatch;
+        return current.bounds;
+    }
+
+    static SpriteBatch GetMainBatch() {
+        return current.mainBatch;
+    }
+
+    static void RegisterWorldObject(IWorldObject obj) {
+        current.world.addWorldObject(obj);
+    }
+
+    static void UnregisterWorldObject(IWorldObject obj) {
+        current.world.removeWorldObject(obj);
     }
 }

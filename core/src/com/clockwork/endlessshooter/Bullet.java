@@ -4,25 +4,26 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 /**
  * Created by Chad Collins on 4/25/2016.
  */
-public class Bullet implements IWorldObject {
-    protected float speed;
-    protected Vector2 direction;
-    protected Sprite sprite;
+class Bullet implements IWorldObject {
+    private float speed;
+    private Vector2 direction;
+    private Sprite sprite;
 
-    public Bullet(float x, float y, float speed, Vector2 direction) {
+    Bullet(float x, float y, float speed, Vector2 direction) {
         direction = direction.nor();
-        sprite = new Sprite(new Texture("BasicBullet.png"));
+        sprite = new Sprite(Assets.GetBasicBulletTexture());
         sprite.setSize(10, 10);
         sprite.setX(x-sprite.getWidth()/2);
         sprite.setY(y-sprite.getHeight()/2);
         this.speed = speed;
         this.direction = direction;
-        World.AddWorldObject(this);
+        EndlessShooter.RegisterWorldObject(this);
     }
 
     @Override
@@ -30,13 +31,14 @@ public class Bullet implements IWorldObject {
         sprite.translateX(direction.x * speed * Gdx.graphics.getDeltaTime());
         sprite.translateY(direction.y * speed * Gdx.graphics.getDeltaTime());
 
-        if (sprite.getX() < -100 || sprite.getX() > EndlessShooter.ScreenWidth + 100 ||
-                sprite.getY() < -100 || sprite.getY() > EndlessShooter.ScreenHeight + 100) {
-            World.RemoveWorldObject(this);
+        Rectangle bounds = EndlessShooter.GetScreenBounds();
+        if (sprite.getX() < bounds.getX() - 100 || sprite.getX() > bounds.getWidth() + bounds.getX() + 100 ||
+                sprite.getY() < bounds.getY() - 100 || sprite.getY() > bounds.getHeight() + bounds.getY() + 100) {
+            EndlessShooter.UnregisterWorldObject(this);
         }
     }
 
-    public void setColor(float r, float g, float b, float a)
+    void setColor(float r, float g, float b, float a)
     {
         sprite.setColor(r, g, b, a);
     }
@@ -56,7 +58,7 @@ public class Bullet implements IWorldObject {
     @Override
     public void hitOccurred(IWorldObject other) {
         if (!(other instanceof Bullet)) {
-            World.RemoveWorldObject(this);
+            EndlessShooter.UnregisterWorldObject(this);
         }
     }
 

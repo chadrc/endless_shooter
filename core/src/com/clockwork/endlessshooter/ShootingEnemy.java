@@ -7,15 +7,15 @@ import com.badlogic.gdx.utils.Timer;
 /**
  * Created by Chad Collins on 4/26/2016.
  */
-public class ShootingEnemy extends Enemy {
-    Timer.Task shootTask = new Timer.Task() {
+class ShootingEnemy extends Enemy {
+    private Timer.Task shootTask = new Timer.Task() {
         @Override
         public void run() {
             shoot();
         }
     };
 
-    public ShootingEnemy(int health, Vector2 position) {
+    ShootingEnemy(int health, Vector2 position) {
         super(health, position);
         Timer.schedule(shootTask, MathUtils.random(0, 3f), 3);
     }
