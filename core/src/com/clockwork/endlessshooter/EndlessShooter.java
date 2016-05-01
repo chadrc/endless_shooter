@@ -11,8 +11,8 @@ import com.badlogic.gdx.math.Vector2;
 
 public class EndlessShooter extends ApplicationAdapter {
     private static EndlessShooter current;
-    static float ScreenWidth = 800;
-    static float ScreenHeight = 800;
+    private static float ScreenWidth = 800;
+    private static float ScreenHeight = 800;
     static OrthographicCamera MainCamera;
     private SpriteBatch mainBatch;
     private World world;

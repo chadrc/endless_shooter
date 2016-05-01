@@ -21,7 +21,7 @@ class ShootingEnemy extends Enemy {
     }
 
     private void shoot() {
-        if (getPosition().y - getSize().y > EndlessShooter.ScreenHeight) {
+        if (getPosition().y - getSize().y > EndlessShooter.GetScreenBounds().getHeight()) {
             return;
         }
         
